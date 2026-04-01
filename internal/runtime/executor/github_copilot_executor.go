@@ -377,6 +377,8 @@ func (e *GitHubCopilotExecutor) ExecuteStream(ctx context.Context, auth *cliprox
 			var chunks [][]byte
 			if useResponses && from.String() == "claude" {
 				chunks = translateGitHubCopilotResponsesStreamToClaude(bytes.Clone(line), &param)
+			} else if useResponses && from.String() == "openai-response" {
+				chunks = normalizeGitHubCopilotResponsesStreamForOpenAI(bytes.Clone(line), &param)
 			} else {
 				chunks = sdktranslator.TranslateStream(ctx, to, from, req.Model, bytes.Clone(opts.OriginalRequest), body, bytes.Clone(line), &param)
 			}
